@@ -2,14 +2,35 @@ import { action, makeAutoObservable, observable } from "mobx";
 import { IPosition } from "../interface/position";
 import { FindMatrixBlockPosition } from "../utils/find-matrix-key-position";
 import { RandomNumbersOrder } from "../utils/random-numbers-order";
+import { api } from "../utils/Api";
 
 class GameStore {
   @observable
   matrix: number[][] = [];
 
+  @observable
+  isGameStarted: Boolean = false;
+
+  @observable
+  isResetting: Boolean = true;
+
+  @observable
+  moves: number = 0;
+
+  @observable
+  time: number = 0;
+
   constructor() {
     makeAutoObservable(this);
   }
+
+  @action
+  saveScores = async () => {
+    await api.post("score", {
+      time: this.time,
+      moves: this.moves,
+    });
+  };
 
   @action
   generateRandomMatrix = () => {
@@ -71,7 +92,7 @@ class GameStore {
     if (
       column === undefined ||
       row === undefined ||
-      lastColumn == undefined ||
+      lastColumn === undefined ||
       lastRow === undefined
     )
       return null;
@@ -79,5 +100,18 @@ class GameStore {
     this.matrix[lastRow][lastColumn] = blockNumber;
     this.matrix[row][column] = 16;
   };
+
+  @action
+  setIsGameStarted = (isGameStarted: boolean) =>
+    (this.isGameStarted = isGameStarted);
+
+  @action
+  setIsResetting = (isResetting: boolean) => (this.isResetting = isResetting);
+
+  @action
+  setMoves = (moves: number) => (this.moves = moves);
+
+  @action
+  setTime = (time: number) => (this.time = time);
 }
 export default new GameStore();

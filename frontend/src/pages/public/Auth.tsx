@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties } from "react";
 import { useForm } from "react-hook-form";
 import ConfirmButton from "../../components/ConfirmButton";
 import JoystickItem from "../../components/JoystickItem";
@@ -20,6 +20,9 @@ function Auth() {
       data.username,
       data.password
     );
+    if (!access_token) {
+      await userStore.register(data.username, data.password);
+    }
     userStore.setToken(access_token);
     securedStorage.set("access_token", access_token);
   };
@@ -75,6 +78,7 @@ const styles: Record<string, CSSProperties> = {
     padding: "40px",
   },
   formInput: { marginBottom: "10px" },
+  buttonsContainer: {},
 };
 
 export default observer(Auth);

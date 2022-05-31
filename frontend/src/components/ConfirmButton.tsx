@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 
 interface Props {
   text?: string;
-  onClick?: () => {};
+  onClick?: () => void;
   type?: "submit";
 }
 

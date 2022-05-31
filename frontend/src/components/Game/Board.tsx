@@ -9,13 +9,39 @@ interface Props {
 
 function Board({ matrix }: Props) {
   const { gameStore } = useStore();
+
+  const isWinCondition = () => {
+    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+    const matrix = gameStore.matrix;
+
+    let indexesViewed = 0;
+    for (const row of matrix) {
+      for (const columnNumber of row) {
+        if (columnNumber !== numbers[indexesViewed]) return false;
+        indexesViewed++;
+      }
+    }
+
+    return true;
+  };
+
+  if (isWinCondition()) {
+    gameStore.saveScores();
+  }
+
   const handleBlockClick = (blockNumber: number) => {
+    if (!gameStore.isGameStarted) {
+      gameStore.setIsGameStarted(true);
+    }
+
     if (blockNumber === 16) return;
 
     const lastPosition = gameStore.findEmptyKeyNearby(blockNumber);
     if (!lastPosition) return;
 
     gameStore.swapWithLast(lastPosition, blockNumber);
+    gameStore.setMoves(gameStore.moves + 1);
   };
 
   return (

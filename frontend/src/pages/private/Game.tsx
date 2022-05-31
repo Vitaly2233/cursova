@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect } from "react";
 import Board from "../../components/Game/Board";
 import Controller from "../../components/Game/Controller";
 import { useStore } from "../../store";
@@ -8,12 +8,15 @@ function Game() {
   const { gameStore } = useStore();
 
   const init = async () => {
-    gameStore.setMatrix(gameStore.generateRandomMatrix());
+    if (gameStore.isResetting) {
+      gameStore.setMatrix(gameStore.generateRandomMatrix());
+      gameStore.setIsResetting(false);
+    }
   };
 
   useEffect(() => {
     init();
-  }, []);
+  }, [gameStore.isResetting]);
 
   return (
     <div style={styles.container}>

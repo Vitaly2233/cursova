@@ -27,6 +27,20 @@ class UserStore {
   };
 
   @action
+  register = async (username: string, password: string) => {
+    const res = await api.post<{ access_token: string }>("auth/register", {
+      username,
+      password,
+    });
+
+    if (res.status !== 201) {
+      return false;
+    }
+
+    return true;
+  };
+
+  @action
   setUser = (user: User) => {
     this.user = user;
   };
