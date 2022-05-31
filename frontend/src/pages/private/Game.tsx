@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import { CSSProperties, useEffect } from "react";
 import Board from "../../components/Game/Board";
 import Controller from "../../components/Game/Controller";
+import ScoreBoard from "../../components/Game/ScoreBoard";
 import { useStore } from "../../store";
 
 function Game() {
@@ -22,6 +23,7 @@ function Game() {
     <div style={styles.container}>
       <Controller />
       <Board matrix={gameStore.matrix} />
+      <ScoreBoard />
     </div>
   );
 }
