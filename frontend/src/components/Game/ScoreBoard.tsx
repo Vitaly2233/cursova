@@ -1,8 +1,25 @@
 import { observer } from "mobx-react";
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect } from "react";
+import { useStore } from "../../store";
 
 function ScoreBoard() {
-  return <div style={styles.container}></div>;
+  const { gameStore } = useStore();
+
+  const init = async () => {
+    await gameStore.setLastScores();
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  return (
+    <div style={styles.container}>
+      Your previous moves {gameStore.lastMoves}
+      <br></br>
+      Your previous time {gameStore.lastTime}
+    </div>
+  );
 }
 
 const styles: Record<string, CSSProperties> = {
@@ -16,6 +33,7 @@ const styles: Record<string, CSSProperties> = {
     width: "200px",
     height: "100px",
     justifyContent: "center",
+    textAlign: "center",
     alignItems: "center",
     backgroundColor: "#ffd5a6",
   },

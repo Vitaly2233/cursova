@@ -1,8 +1,8 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import { IPosition } from "../interface/position";
 import { FindMatrixBlockPosition } from "../utils/find-matrix-key-position";
-import { RandomNumbersOrder } from "../utils/random-numbers-order";
 import { api } from "../utils/Api";
+import { RandomNumbersOrder } from "../utils/random-numbers-order";
 
 class GameStore {
   @observable
@@ -18,7 +18,13 @@ class GameStore {
   moves: number = 0;
 
   @observable
+  lastMoves: number = 0;
+
+  @observable
   time: number = 0;
+
+  @observable
+  lastTime: number = 0;
 
   constructor() {
     makeAutoObservable(this);
@@ -66,7 +72,6 @@ class GameStore {
 
     const rows = [this.matrix[row], this.matrix[row + 1], this.matrix[row - 1]];
 
-    // TODO rewrite
     if (rows[0] !== undefined) {
       if (rows[0][column + 1] === 16) return { row, column: column + 1 };
       if (rows[0][column - 1] === 16) return { row, column: column - 1 };
@@ -113,5 +118,14 @@ class GameStore {
 
   @action
   setTime = (time: number) => (this.time = time);
+
+  @action
+  setLastScores = async () => {
+    const { data } = await api.get("score/last_scores");
+    if (data) {
+      this.lastMoves = data.moves;
+      this.lastTime = data.time;
+    }
+  };
 }
 export default new GameStore();

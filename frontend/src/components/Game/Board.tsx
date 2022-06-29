@@ -15,20 +15,19 @@ function Board({ matrix }: Props) {
 
     const matrix = gameStore.matrix;
 
+    if (matrix.length === 0) return false;
+
     let indexesViewed = 0;
-    for (const row of matrix) {
-      for (const columnNumber of row) {
-        if (columnNumber !== numbers[indexesViewed]) return false;
+    for (const row of matrix)
+      for (const matrixNumber of row) {
+        if (matrixNumber !== numbers[indexesViewed]) return false;
         indexesViewed++;
       }
-    }
 
     return true;
   };
 
-  if (isWinCondition()) {
-    gameStore.saveScores();
-  }
+  if (isWinCondition()) gameStore.saveScores();
 
   const handleBlockClick = (blockNumber: number) => {
     if (!gameStore.isGameStarted) {

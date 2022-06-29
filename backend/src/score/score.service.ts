@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EntityService } from '../common/abstract/entity-service.abstract';
+import { UserDocument } from '../user/schema/user.schema';
 import { UserService } from '../user/user.service';
 import { CreateScoreDto } from './dto/create-score.dto';
 import { Score, ScoreDocument } from './schema/score.schema';
@@ -24,5 +25,9 @@ export class ScoreService extends EntityService<ScoreDocument> {
     );
 
     return score;
+  }
+
+  getLastScores(user: UserDocument) {
+    return this.scoreModel.findOne({ user: user._id }).sort({ createdAt: -1 });
   }
 }
